@@ -105,10 +105,6 @@ def calc(df, add_df):
 				if add_df['quarterly_low'][j] == None or add_df['quarterly_high'][j] == None:
 					quarterly(df,add_df, i, j)
 
-	for i in range(add_df.shape[0]):
-		for j in range(len(add_df.columns)):
-			add_df[add_df.columns[j]][i] = add_df[add_df.columns[j]][i].round(2)
-
 	print(add_df)
 def weekly(df,add_df,i,j):
 	add_df['weekly_low'][j] = df['Low'][i-df.index[i].weekday()]
