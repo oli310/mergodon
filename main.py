@@ -67,7 +67,6 @@ def set_date_lst(date_today):
 		days[6] -= timedelta(1)
 	for i in range(len(days)):
 		days[i] = days[i].strftime('%Y-%m-%d 00:00:00')
-	print(type(days[2]))
 	return days
 
 def solution_dataframe(date):
@@ -95,11 +94,8 @@ def download_data(add_df):
 	calc(df,add_df)
 def calc(df, add_df): 
 	for i in range(len(df.index)):
-		print(i)
 		for j in range(len(add_df.index)):
-			print(j, 'j',add_df.columns.shape[0])
 			if str(df.index[i]) == add_df.index[j]:
-				print(j, 'kacsa')
 				add_df['High'][j] = df['High'][i]
 				add_df['Low'][j] = df['Low'][i] #.round(1)
 				add_df['Close'][j] = df['Close'][i]
@@ -112,6 +108,10 @@ def calc(df, add_df):
 					monthly(df,add_df, i, j)
 				if add_df['quarterly_low'][j] == None or add_df['quarterly_high'][j] == None:
 					quarterly(df,add_df, i, j)
+	for i in range(len(add_df.index)):
+		for j in add_df.columns:
+			add_df[j][i] =  add_df[j][i].round(2)
+
 	print(add_df)
 def weekly(df,add_df,i,j):
 	add_df['weekly_low'][j] = df['Low'][i-df.index[i].weekday()]
