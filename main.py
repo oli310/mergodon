@@ -59,10 +59,15 @@ def set_date_lst(date_today):
 			date_today]
 	if date_today.weekday() == 5:
 		days[6] -= timedelta(1)
-	if date_today.weekday() == 6:
+	elif date_today.weekday() == 6:
 		days[6] -= timedelta(2)
+	elif date_today.weekday() == 0:
+		days[6] -= timedelta(3)
+	else: 
+		days[6] -= timedelta(1)
 	for i in range(len(days)):
 		days[i] = days[i].strftime('%Y-%m-%d 00:00:00')
+	print(type(days[2]))
 	return days
 
 def solution_dataframe(date):
@@ -90,26 +95,31 @@ def download_data(add_df):
 	calc(df,add_df)
 def calc(df, add_df): 
 	for i in range(len(df.index)):
+		print(i)
 		for j in range(len(add_df.index)):
+			print(j, 'j',add_df.columns.shape[0])
 			if str(df.index[i]) == add_df.index[j]:
+				print(j, 'kacsa')
 				add_df['High'][j] = df['High'][i]
 				add_df['Low'][j] = df['Low'][i] #.round(1)
 				add_df['Close'][j] = df['Close'][i]
 				add_df['Open'][j] = df['Open'][i]
 				add_df['daily_low'][j] = df['Low'][i]
 				add_df['daily_high'][j] = df['High'][i]
-				if add_df['weekly_low'][j] == None or add_df['weekly_low'][j] == None: 
+				if add_df['weekly_low'][j] == None or add_df['weekly_high'][j] == None: 
 					weekly(df,add_df, i, j)
 				if add_df['monthly_low'][j] == None or add_df['monthly_high'][j] == None: 
 					monthly(df,add_df, i, j)
 				if add_df['quarterly_low'][j] == None or add_df['quarterly_high'][j] == None:
 					quarterly(df,add_df, i, j)
-
 	print(add_df)
 def weekly(df,add_df,i,j):
 	add_df['weekly_low'][j] = df['Low'][i-df.index[i].weekday()]
 	add_df['weekly_high'][j] = df['High'][i-df.index[i].weekday()]
-	for k in range(5):
+	rng = 5
+	if i + 5 > df.shape[0]: 
+		rng = df.index[i].weekday()
+	for k in range(rng):
 		if add_df['weekly_low'][j] > df['Low'][i-df.index[i].weekday()+k]:
 			add_df['weekly_low'][j] = df['Low'][i-df.index[i].weekday()+k]
 		if add_df['weekly_high'][j] < df['High'][i-df.index[i].weekday()+k]:
